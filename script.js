@@ -193,13 +193,25 @@ els.optimizeBtn.addEventListener('click', async () => {
     els.optimizeBtn.innerHTML = "Processing...";
     els.optimizeBtn.style.opacity = "0.7";
 
-    // DECISION: Aggressive Mode = Chinese (Nuclear) | Normal Mode = English (Safe)
+    // DECISION STRATEGY
     const useNuclear = els.aggressiveMode && els.aggressiveMode.checked;
-    const targetLang = useNuclear ? 'zh-CN' : 'en';
-
-    // 1. Pre-processing (Aggressive Mode Only)
-    let textToTranslate = rawInput;
+    const isShort = rawInput.length < 150; // Threshold for overhead viability
+    
+    // Strategy: 
+    // 1. Long + Nuclear -> Translate to Chinese (Max Compression)
+    // 2. Short + Nuclear -> "Caveman Mode" (Strip words, Keep lang, NO suffix) -> Beats translation overhead
+    // 3. Normal Mode -> Translate to English (Standard optimization)
+    
+    let targetLang;
     if (useNuclear) {
+        targetLang = isShort ? 'caveman' : 'zh-CN';
+    } else {
+        targetLang = 'en';
+    }
+
+    // 1. Pre-processing (Aggressive / Caveman)
+    let textToTranslate = rawInput;
+    if (useNuclear) { // Apply to both Chinese and Caveman strategies
         STOPWORDS.forEach(regex => {
             textToTranslate = textToTranslate.replace(regex, '');
         });
@@ -209,34 +221,42 @@ els.optimizeBtn.addEventListener('click', async () => {
     const sourceLang = els.sourceLang ? (els.sourceLang.value === 'auto' ? 'es' : els.sourceLang.value) : 'es';
 
     try {
-        console.log(`Starting translation to ${targetLang}...`);
+        console.log(`Optimization Strategy: ${targetLang} (Source: ${sourceLang})`);
         
-        // 2. Translate
-        let translated = await translateChunked(textToTranslate, sourceLang, targetLang);
-        console.log("Translation done:", translated);
-        
-        // 3. Post-Process (Compression)
-        let optimized;
-        if (useNuclear) {
-            optimized = compactChinese(translated);
+        let finalOutput = "";
+
+        if (targetLang === 'caveman') {
+            // DIRECT BYPASS: No translation API call needed
+            // Just the stripped text. The AI will reply in source lang implicitly because input is in source lang.
+            finalOutput = textToTranslate; 
+            
+            // Visual feedback that we skipped translation for efficiency
+            els.notification.innerHTML = "⚡ <strong>Smart Bypass:</strong> Short prompt detected. 'Caveman Mode' used to avoid translation overhead.";
+            els.notification.classList.remove('hidden');
+            setTimeout(() => els.notification.classList.add('hidden'), 5000);
+
         } else {
-            optimized = translated; // English text is kept as-is
+            // Full Translation Pipeline
+            let translated = await translateChunked(textToTranslate, sourceLang, targetLang);
+            
+            // Post-Process
+            let optimized;
+            if (targetLang === 'zh-CN') {
+                optimized = compactChinese(translated);
+            } else {
+                optimized = translated;
+            }
+            
+            // Add Instruction Suffix (Only needed if we changed language)
+            const suffix = SUFFIXES[sourceLang] || SUFFIXES['auto'];
+            finalOutput = optimized + suffix;
         }
-        
-        // 4. Add Instruction Suffix
-        // If we translated to English, ask for reply in original language (Spanish usually)
-        // If source was 'auto' (usually Spanish user), we stick to that.
-        const suffix = SUFFIXES[sourceLang] || SUFFIXES['auto'];
-        
-        // If optimizing to ENGLISH, we can be smart:
-        // Input: Spanish -> Output: English + "(Responde en Español)"
-        const candidateOutput = optimized + suffix;
 
         // 5. Compare & Decide
         const inputT = count(rawInput);
-        const outputT = count(candidateOutput);
+        const outputT = count(finalOutput);
         
-        els.output.value = candidateOutput;
+        els.output.value = finalOutput;
         els.outputTokens.innerText = `${outputT} Tokens`;
 
         const savings = inputT - outputT;
