@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Token Minimizer | Save Money for Education</title>
+    <meta name="description" content="Reduce AI prompt costs by 40-60%. Translates prompts to dense Chinese or strips filler words to minimize token usage.">
+    <meta property="og:title" content="Token Minimizer 🎓">
+    <meta property="og:description" content="Save money on AI costs. Minimize tokens in your prompts by translating to high-density Chinese.">
+    <meta property="og:type" content="website">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
 </head>
@@ -60,10 +64,10 @@
                         </div>
                     </div>
                 </div>
-                <textarea id="inputPrompt" placeholder="Paste your long prompt here..."></textarea>
+                <textarea id="inputPrompt" placeholder="Paste your long prompt here..." aria-label="Input prompt to optimize"></textarea>
                 <div class="panel-footer">
                     <span id="inputTokens" class="token-count">0 Tokens</span>
-                    <button id="optimizeBtn" class="action-btn">
+                    <button id="optimizeBtn" class="action-btn" title="Keyboard shortcut: Ctrl+Enter">
                         MINIMIZE TOKENS 
                         <span class="btn-icon">➔</span>
                     </button>
@@ -80,7 +84,7 @@
                 </div>
                 
                 <div class="output-wrapper">
-                    <textarea id="outputPrompt" readonly placeholder="Optimized result will appear here..."></textarea>
+                    <textarea id="outputPrompt" readonly placeholder="Optimized result will appear here..." aria-label="Optimized output"></textarea>
                 </div>
 
                 <div class="panel-footer">

@@ -185,7 +185,13 @@ els.optimizeBtn.addEventListener('click', async () => {
     if (isTranslating) return;
     const rawInput = els.input.value.trim();
     if (!rawInput) {
-        alert("Please enter a prompt first!");
+        // Visual feedback instead of just alert
+        els.input.style.borderColor = 'var(--danger)';
+        els.input.setAttribute('placeholder', '⚠️ Please enter a prompt first!');
+        setTimeout(() => {
+            els.input.style.borderColor = '';
+            els.input.setAttribute('placeholder', 'Paste your long prompt here...');
+        }, 2000);
         return;
     }
 
@@ -298,4 +304,12 @@ els.downloadBtn.addEventListener('click', () => {
     a.href = url; a.download = 'optimized.toon';
     document.body.appendChild(a); a.click();
     document.body.removeChild(a);
+});
+
+// Keyboard shortcut: Ctrl+Enter to optimize
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        els.optimizeBtn.click();
+    }
 });
