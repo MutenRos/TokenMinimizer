@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Minimizer | Save Money for Education</title>
+    <meta name="description" content="Reduce AI prompt costs by 40-60%. Translates prompts to dense Chinese or strips filler words to minimize token usage.">
+    <meta property="og:title" content="Token Minimizer 🎓">
+    <meta property="og:description" content="Save money on AI costs. Minimize tokens in your prompts by translating to high-density Chinese.">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <span class="icon">🎓</span>
+                <div class="branding">
+                    <span class="title">TOKEN SAVER</span>
+                    <span class="subtitle">Save on AI costs. Invest in your brain.</span>
+                </div>
+            </div>
+            <div class="status-bar">
+                <span id="tokenizerStatus" class="status-item loading">Loading Logic...</span>
+            </div>
+        </header>
+
+        <!-- Concept / Education Mission -->
+        <section class="mission-box">
+            <details>
+                <summary>💡 <strong>How does this save money?</strong> (Click to learn)</summary>
+                <div class="mission-content">
+                    <p>AI models (like GPT-4) charge by "tokens".</p>
+                    <ul>
+                        <li><strong>English/Spanish</strong> are inefficient (1 word ≈ 1.3 tokens).</li>
+                        <li><strong>Chinese (Logograms)</strong> is dense (1 sentence ≈ few tokens).</li>
+                    </ul>
+                    <p>This tool translates your prompt to <strong>High-Density Chinese</strong> and strips filler words. The AI understands the logic perfectly but costs you <strong>~40-60% less</strong> per prompt.</p>
+                </div>
+            </details>
+        </section>
+
+        <!-- Main Input -->
+        <main>
+            <div class="panel input-panel">
+                <div class="panel-header">
+                    <label for="inputPrompt">YOUR PROMPT</label>
+                    <div class="tools">
+                        <select id="sourceLang" class="lang-select">
+                            <option value="auto">Auto-Detect</option>
+                            <option value="es" selected>Español</option>
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                            <option value="pt">Português</option>
+                        </select>
+                        <div class="toggle-group">
+                            <label class="toggle" title="Converts to Dense Chinese + Removes stopwords (Max Savings)">
+                                <input type="checkbox" id="aggressiveMode" checked>
+                                <span class="slider"></span>
+                                <span class="label">Nuclear Mode (Max Savings)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <textarea id="inputPrompt" placeholder="Paste your long prompt here..." aria-label="Input prompt to optimize"></textarea>
+                <div class="panel-footer">
+                    <span id="inputTokens" class="token-count">0 Tokens</span>
+                    <button id="optimizeBtn" class="action-btn" title="Keyboard shortcut: Ctrl+Enter">
+                        MINIMIZE TOKENS 
+                        <span class="btn-icon">➔</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output -->
+            <div class="panel output-panel">
+                <div class="panel-header">
+                    <label>OPTIMIZED OUTPUT (.toon)</label>
+                    <div class="meta-info">
+                        <span id="savingsBadge" class="savings-badge hidden">SAVED: 0%</span>
+                    </div>
+                </div>
+                
+                <div class="output-wrapper">
+                    <textarea id="outputPrompt" readonly placeholder="Optimized result will appear here..." aria-label="Optimized output"></textarea>
+                </div>
+
+                <div class="panel-footer">
+                    <span id="outputTokens" class="token-count">0 Tokens</span>
+                    <div class="actions">
+                        <button id="copyBtn" class="secondary-btn">Copy</button>
+                        <button id="downloadBtn" class="secondary-btn">Save .toon</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <div id="recommendation" class="notification hidden">
+            <!-- Dynamic recommendation shows here -->
+        </div>
+
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
